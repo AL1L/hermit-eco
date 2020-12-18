@@ -3,6 +3,23 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+
+window.firebase = firebase;
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA9a7eK__8fW66F_x1dSKduFLcv74sX0Hc",
+  authDomain: "hermit-eco.firebaseapp.com",
+  projectId: "hermit-eco",
+  storageBucket: "hermit-eco.appspot.com",
+  messagingSenderId: "236268104142",
+  appId: "1:236268104142:web:9f3b770014373eb6b4239f",
+  measurementId: "G-GRJP6ZCLYZ"
+};
+
+firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <React.StrictMode>
