@@ -5,6 +5,7 @@ import AddAccount from '../components/AddAccount';
 import Page from '../components/Page/Page';
 import Transactions from '../components/Transactions';
 import { isAdmin, numberWithCommas } from '../utils';
+import AccountDisplayName from '../components/AccountDisplayName/AccountDisplayName';
 
 const Hermit = ({ hermits, match: { params: { hermitId } } }) => {
   const [showAddAccount, setShowAddAccount] = useState(false);
@@ -71,7 +72,7 @@ const Hermit = ({ hermits, match: { params: { hermitId } } }) => {
           </thead>
           <tbody>
             {hermit.financialAccounts.map(account => <tr key={account.id}>
-              <td><NavLink to={`/accounts/${account.id}`}>{account.displayName || account.id}</NavLink></td>
+              <td><AccountDisplayName account={account} /></td>
               <td>{numberWithCommas(account.balance)}</td>
               <td>{Math.round(1 / account.owners.length * 100)}%</td>
             </tr>)}

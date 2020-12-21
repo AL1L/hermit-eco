@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, Col, Row, Table } from 'react-bootstrap';
-import AddAccount from '../components/AddAccount';
 import HermitDisplayName from '../components/HermitDisplayName/HermitDisplayName';
 import Diamonds from '../components/mcui/Diamonds';
 import Page from '../components/Page/Page';
@@ -12,7 +11,7 @@ const Home = ({ financialAccounts, hermits }) => {
 
   stats.push({
     name: "Economy Volume",
-    value: financialAccounts.reduce((total, account) => total + account.balance, 0)
+    value: financialAccounts.reduce((total, account) => total + (account.id === "minecraft" ? 0 : account.balance), 0)
   });
 
   return <Page>

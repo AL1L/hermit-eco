@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { numberWithCommas } from '../utils';
 
 const Transactions = ({ transactions }) => {
@@ -7,9 +7,9 @@ const Transactions = ({ transactions }) => {
   return <Table striped bordered hover>
     <thead>
       <tr>
-        <th>Time</th>
-        <th>From</th>
-        <th>To</th>
+        {/* <th>Time</th> */}
+        <th>Id</th>
+        <th>Target Account</th>
         <th>Total</th>
         <th>Location</th>
         <th>Video</th>
@@ -21,12 +21,16 @@ const Transactions = ({ transactions }) => {
           <td className="text-center" colSpan="6">No Transactions</td>
         </tr>
         : (transactions || []).map(transaction => <tr key={transaction.id}>
-          <td>{transaction.time}</td>
-          <td>{transaction.from}</td>
-          <td>{transaction.to}</td>
+          {/* <td>{new Date(transaction.created.seconds * 1000).toString()}</td> */}
+          <td>{transaction.id}</td>
+          <td>{transaction.sourceAccount.displayName || transaction.sourceAccount.id}</td>
           <td>{numberWithCommas(transaction.amount)} {transaction.units}</td>
           <td>{transaction.location}</td>
-          <td>{transaction.videoId}:{transaction.videoTime}</td>
+          <td className="text-center">
+            <a href={`https://youtu.be/${transaction.videoId}?t=${transaction.videoTime}`} target="_blank" rel="noreferrer">
+              <Button>Watch</Button>
+            </a>
+          </td>
         </tr>)}
     </tbody>
   </Table>

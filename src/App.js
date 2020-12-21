@@ -29,12 +29,14 @@ const App = ({ children }) => {
           owner.financialAccounts.push(account);
 
           owner.netWorth += account.balance / (account.owners.length || 1);
-          if (owner.id === account.id)
+          if (owner.id === account.id) {
             owner.balance = account.balance;
+            account.displayName = owner.displayName;
+          }
         }
 
         for (const transaction of account.transactions) {
-          transaction.merchant = accounts.find(a => a.id === transaction.merchant.id);
+          transaction.merchant = accounts.find(a => a.id === transaction.sourceAccount.id);
         }
       }
 

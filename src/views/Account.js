@@ -1,3 +1,4 @@
+import AddTransaction from 'components/AddTransaction';
 import React, { useState } from 'react';
 import { Card, Col, Row, Table, Button } from 'react-bootstrap';
 import HermitDisplayName from '../components/HermitDisplayName/HermitDisplayName';
@@ -67,7 +68,7 @@ const Account = ({ hermits, financialAccounts, match: { params: { accountId } } 
       <Col>
         <Row>
           <Col>
-            <h2>Financial Accounts</h2>
+            <h2>Transactions</h2>
           </Col>
           {isAdmin() ?
             <Col className="text-right">
@@ -77,6 +78,7 @@ const Account = ({ hermits, financialAccounts, match: { params: { accountId } } 
         <Transactions transactions={account.transactions} />
       </Col>
     </Row>
+    <AddTransaction hermits={hermits} financialAccounts={financialAccounts} show={showAddTransactions} onHide={() => setShowAddTransactions(false)} account={account} />
   </Page>
 }
 

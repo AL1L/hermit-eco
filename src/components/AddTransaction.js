@@ -2,8 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import firebase from 'firebase/app';
 
+function newUuid() {
+  var dt = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (dt + Math.random() * 16) % 16 | 0;
+    dt = Math.floor(dt / 16);
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+  return uuid;
+}
+
 const AddTransaction = ({ financialAccounts, hermits, show, onHide, account }) => {
-  const [sourceAccount, setSourceAccount] = useState(null);
+  const [targetAccount, setTargetAccount] = useState(null);
   const [amount, setAmount] = useState(0);
   const [location, setLocation] = useState("");
   const [videoId, setVideoId] = useState("");
@@ -14,19 +24,48 @@ const AddTransaction = ({ financialAccounts, hermits, show, onHide, account }) =
     e.preventDefault();
     const firestore = firebase.firestore();
 
-    firestore.collection('financialAccounts').doc(id).set({
-      sourceAccount: financialAccounts.find(a => a.id === sourceAccount),
-      amount,
-      location,
-      videoId,
-      videoTime,
-      notes,
-    })
+    const created = new Date();
+    const id = newUuid();
+    const targetAccountObj = financialAccounts.find(a => a.id === targetAccount);
+    const targetAcountRef = firestore.collection('financialAccounts').doc(targetAccountObj.id);
+    const sourceAcountRef = firestore.collection('financialAccounts').doc(account.id);
+
+    firestore.collection('financialAccounts').doc(account.id).set({
+      balance: account.balance - amount,
+      transactions: [
+        {
+          id,
+          sourceAccount: targetAcountRef,
+          amount: -amount,
+          location,
+          videoId,
+          videoTime,
+          notes,
+          created
+        }
+      ]
+    }, { merge: true });
+
+    firestore.collection('financialAccounts').doc(targetAccountObj.id).set({
+      balance: targetAccountObj.balance + amount,
+      transactions: [
+        {
+          id,
+          sourceAccount: sourceAcountRef,
+          amount,
+          location,
+          videoId,
+          videoTime,
+          notes,
+          created
+        }
+      ]
+    }, { merge: true });
 
     if (onHide)
       onHide();
 
-    setSourceAccount(null);
+    setTargetAccount(null);
     setAmount(0);
     setLocation("");
     setVideoId("");
@@ -34,29 +73,37 @@ const AddTransaction = ({ financialAccounts, hermits, show, onHide, account }) =
     setNotes("")
   }
 
-  useEffect(() => {
-    setOwners(defaultOwners || []);
-  }, [setOwners, defaultOwners]);
-
   return <Modal size="xl" show={show} onHide={onHide} centered>
     <Modal.Header>
       <Modal.Title>Add Financial Account</Modal.Title>
     </Modal.Header>
     <Form onSubmit={onSubmit}>
       <Modal.Body>
-        <Form.Group>
-          <Form.Label>id</Form.Label>
-          <Form.Control type="text" placeholder="Enter Id" name="id" value={id} onChange={e => setId(e.target.value.toLowerCase())} />
+        <Form.Group className="mt-3">
+          <Form.Label>Target Account</Form.Label>
+          <Form.Control as="select" value={targetAccount} onChange={e => setTargetAccount(e.target.value)}>
+            {financialAccounts.map(a => <option key={a.id} value={a.id}>{a.displayName || a.id}</option>)}
+          </Form.Control>
         </Form.Group>
         <Form.Group className="mt-3" >
-          <Form.Label>Name</Form.Label>
-          <Form.Control type="text" placeholder="Enter Name" value={name} onChange={e => setName(e.target.value)} />
+          <Form.Label>Amount</Form.Label>
+          <Form.Control type="number" placeholder="Enter Amount" value={amount} onChange={e => setAmount(parseFloat(e.target.value))} />
         </Form.Group>
-        <Form.Group className="mt-3">
-          <Form.Label>Owners</Form.Label>
-          <Form.Control as="select" multiple value={owners} onChange={e => setOwners([...e.target.children].filter(e => e.selected).map(e => e.value))}>
-            {hermits.map(h => <option key={h.id} value={h.id}>{h.displayName}</option>)}
-          </Form.Control>
+        <Form.Group className="mt-3" >
+          <Form.Label>Location</Form.Label>
+          <Form.Control type="text" placeholder="Enter Location" value={location} onChange={e => setLocation(e.target.value)} />
+        </Form.Group>
+        <Form.Group className="mt-3" >
+          <Form.Label>Video Id</Form.Label>
+          <Form.Control type="text" placeholder="Enter Video Id" value={videoId} onChange={e => setVideoId(e.target.value)} />
+        </Form.Group>
+        <Form.Group className="mt-3" >
+          <Form.Label>Video Timestamp</Form.Label>
+          <Form.Control type="number" placeholder="Enter Video Timestamp" value={videoTime} onChange={e => setVideoTime(parseFloat(e.target.value))} />
+        </Form.Group>
+        <Form.Group controlId="exampleForm.ControlTextarea1">
+          <Form.Label>Notes</Form.Label>
+          <Form.Control as="textarea" rows={3} value={notes} onChange={e => setNotes(e.target.value)} />
         </Form.Group>
       </Modal.Body>
       <Modal.Footer>
