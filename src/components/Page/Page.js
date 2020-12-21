@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import firebase from 'firebase/app';
+import { NavLink } from 'react-router-dom';
 
 const Page = ({ children }) => {
   const auth = firebase.auth();
@@ -25,7 +26,7 @@ const Page = ({ children }) => {
   return <div className="Page">
     <Navbar bg="light">
       <Container>
-        <Navbar.Brand>Hermit Eco</Navbar.Brand>
+        <Navbar.Brand><NavLink className="text-dark text-decoration-none" to="/" activeClassName="">Hermit Eco</NavLink></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse>
           <Nav className="ms-auto">

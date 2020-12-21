@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './components/Bootstrap/bootstrap.min.css';
 import Home from './views/Home';
 import firebase from 'firebase/app';
+import Hermit from './views/Hermit';
+import Account from './views/Account';
 
 const data = { l: 0 };
 
@@ -11,13 +13,12 @@ const App = ({ children }) => {
   const [hermits, setHermits] = useState([]);
 
   useEffect(() => {
-    console.log("App render");
     const firestore = firebase.firestore();
 
     function buildData() {
       if (!data.accounts || !data.hermits) return;
       const accounts = data.accounts.docs.map(doc => { return { id: doc.id, ...doc.data() } });;
-      const hermits = data.hermits.docs.map(doc => { return { id: doc.id, ...doc.data() } });
+      const hermits = data.hermits.docs.map(doc => { return { id: doc.id, ...doc.data(), netWorth: 0, balance: 0 } });
 
       for (const account of accounts) {
         account.owners = account.owners.map(owner => hermits.find(h => h.id === owner.id));
@@ -27,6 +28,7 @@ const App = ({ children }) => {
 
           owner.financialAccounts.push(account);
 
+          owner.netWorth += account.balance / (account.owners.length || 1);
           if (owner.id === account.id)
             owner.balance = account.balance;
         }
@@ -59,14 +61,14 @@ const App = ({ children }) => {
       if (data.removeHermitsListener)
         data.removeHermitsListener();
     }
-  }, [setFinancialAccounts, setHermits])
-
-  console.log(data.l++, hermits, financialAccounts);
+  }, [setFinancialAccounts, setHermits]);
 
   return <Router>
-    <Route path="/">
+    <Route exact path="/">
       <Home financialAccounts={financialAccounts} hermits={hermits} />
     </Route>
+    <Route path="/hermits/:hermitId" component={props => <Hermit financialAccounts={financialAccounts} hermits={hermits} {...props} />} />
+    <Route path="/accounts/:accountId" component={props => <Account financialAccounts={financialAccounts} hermits={hermits} {...props} />} />
   </Router>;
 };
 

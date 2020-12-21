@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/remote-config';
 
 window.firebase = firebase;
 

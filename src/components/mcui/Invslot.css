@@ -1,0 +1,31 @@
+.invslot-item {
+  display: inline-block;
+  position: relative;
+  height: 48px;
+  width: 48px;
+  background: #8B8B8B no-repeat center center / 32px 32px;
+  border: 2px solid;
+  border-color: #373737 #FFF #FFF #373737;
+  padding: 6px;
+}
+
+.invslot-item > .invslot-stacksize {
+  font-size: 16px;
+  line-height: 1;
+  text-align: left;
+  position: absolute;
+  right: 2px;
+  bottom: 4px;
+  font-family: Minecraft, sans-serif !important;
+  font-weight: normal !important;
+  color: #fff !important;
+  text-shadow: 2px 2px 0 #3f3f3f;
+  filter: dropshadow(color=#3F3F3F, offx=2, offy=2);
+  z-index: 2;
+}
+
+.invslot-item > .inv-sprite {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+}

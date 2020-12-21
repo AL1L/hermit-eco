@@ -1,30 +1,13 @@
 import React from 'react';
 import { Card, Col, Row, Table } from 'react-bootstrap';
+import AddAccount from '../components/AddAccount';
+import HermitDisplayName from '../components/HermitDisplayName/HermitDisplayName';
+import Diamonds from '../components/mcui/Diamonds';
 import Page from '../components/Page/Page';
-
-function numberWithCommas(x) {
-  return `${x}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-const HermitDisplayName = ({ hermit }) => {
-  return <><img width="32" src={hermit.avatar} alt={hermit.displayName} /> {hermit.displayName}</>
-}
+import Transactions from '../components/Transactions';
+import { numberWithCommas } from '../utils';
 
 const Home = ({ financialAccounts, hermits }) => {
-  const transactions = [
-    // {
-    //   id: 0,
-    //   time: "Today",
-    //   from: <HermitDisplayName hermit={hermits[0]} />,
-    //   to: <HermitDisplayName hermit={hermits[1]} />,
-    //   amount: 80,
-    //   units: "Diamonds",
-    //   location: "Shopping District",
-    //   videoId: "DLzxrzFCyOs",
-    //   videoTime: 0
-    // },
-  ];
-
   const stats = [];
 
   stats.push({
@@ -50,13 +33,13 @@ const Home = ({ financialAccounts, hermits }) => {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Balance</th>
+              <th>Net Worth</th>
             </tr>
           </thead>
           <tbody>
-            {hermits.map(hermit => <tr key={hermit.ChannelName}>
+            {hermits.map(hermit => <tr key={hermit.id}>
               <td><HermitDisplayName hermit={hermit} /></td>
-              <td>{numberWithCommas(hermit.balance)}</td>
+              <td className="d-flex align-items-center justify-content-between"><Diamonds count={hermit.netWorth} />{numberWithCommas(hermit.netWorth)}</td>
             </tr>)}
           </tbody>
         </Table>
@@ -65,28 +48,7 @@ const Home = ({ financialAccounts, hermits }) => {
     <Row className="mt-3">
       <Col>
         <h2>Transactions</h2>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>From</th>
-              <th>To</th>
-              <th>Total</th>
-              <th>Location</th>
-              <th>Video</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.map(transaction => <tr key={transaction.id}>
-              <td>{transaction.time}</td>
-              <td>{transaction.from}</td>
-              <td>{transaction.to}</td>
-              <td>{numberWithCommas(transaction.amount)} {transaction.units}</td>
-              <td>{transaction.location}</td>
-              <td>{transaction.videoId}:{transaction.videoTime}</td>
-            </tr>)}
-          </tbody>
-        </Table>
+        <Transactions />
       </Col>
     </Row>
   </Page>;
