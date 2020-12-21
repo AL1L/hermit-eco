@@ -1,4 +1,4 @@
-import AddTransaction from 'components/AddTransaction';
+import AddTransaction from '../components/AddTransaction';
 import React, { useState } from 'react';
 import { Card, Col, Row, Table, Button } from 'react-bootstrap';
 import HermitDisplayName from '../components/HermitDisplayName/HermitDisplayName';
