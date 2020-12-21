@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Card, Col, Row, Table, Button } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
 import AddAccount from '../components/AddAccount';
 import Page from '../components/Page/Page';
 import Transactions from '../components/Transactions';
