@@ -36,7 +36,7 @@ const Home = ({ financialAccounts, hermits }) => {
             </tr>
           </thead>
           <tbody>
-            {hermits.map(hermit => <tr key={hermit.id}>
+            {hermits.sort((a, b) => b.netWorth - a.netWorth).map(hermit => <tr key={hermit.id}>
               <td><HermitDisplayName hermit={hermit} /></td>
               <td className="d-flex align-items-center justify-content-between"><Diamonds count={hermit.netWorth} />{numberWithCommas(hermit.netWorth)}</td>
             </tr>)}

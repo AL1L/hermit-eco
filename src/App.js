@@ -17,8 +17,28 @@ const App = ({ children }) => {
 
     function buildData() {
       if (!data.accounts || !data.hermits) return;
-      const accounts = data.accounts.docs.map(doc => { return { id: doc.id, ...doc.data() } });;
-      const hermits = data.hermits.docs.map(doc => { return { id: doc.id, ...doc.data(), netWorth: 0, balance: 0 } });
+      const accounts = data.accounts.docs.map(doc => {
+        const data = doc.data();
+        return {
+          $: data,
+          $ref: doc,
+          id: doc.id,
+          ...data,
+          transactions: data.transactions.map(t => ({ ...t }))
+        }
+      });;
+
+      const hermits = data.hermits.docs.map(doc => {
+        const data = doc.data();
+        return {
+          $: data,
+          $ref: doc,
+          id: doc.id,
+          ...data,
+          netWorth: 0,
+          balance: 0
+        }
+      });
 
       for (const account of accounts) {
         account.owners = account.owners.map(owner => hermits.find(h => h.id === owner.id));
@@ -36,7 +56,7 @@ const App = ({ children }) => {
         }
 
         for (const transaction of account.transactions) {
-          transaction.merchant = accounts.find(a => a.id === transaction.sourceAccount.id);
+          transaction.sourceAccount = accounts.find(a => a.id === transaction.sourceAccount.id);
         }
       }
 

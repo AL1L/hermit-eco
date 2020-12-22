@@ -29,10 +29,12 @@ const AddTransaction = ({ financialAccounts, hermits, show, onHide, account }) =
     const targetAccountObj = financialAccounts.find(a => a.id === targetAccount);
     const targetAcountRef = firestore.collection('financialAccounts').doc(targetAccountObj.id);
     const sourceAcountRef = firestore.collection('financialAccounts').doc(account.id);
-
+    console.log(1);
+    console.log(account);
     firestore.collection('financialAccounts').doc(account.id).set({
       balance: account.balance - amount,
       transactions: [
+        ...account.$.transactions,
         {
           id,
           sourceAccount: targetAcountRef,
@@ -46,9 +48,11 @@ const AddTransaction = ({ financialAccounts, hermits, show, onHide, account }) =
       ]
     }, { merge: true });
 
+    console.log(2)
     firestore.collection('financialAccounts').doc(targetAccountObj.id).set({
       balance: targetAccountObj.balance + amount,
       transactions: [
+        ...targetAccountObj.$.transactions,
         {
           id,
           sourceAccount: sourceAcountRef,

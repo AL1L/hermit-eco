@@ -9,7 +9,7 @@ const Transactions = ({ transactions }) => {
       <tr>
         {/* <th>Time</th> */}
         <th>Id</th>
-        <th>Target Account</th>
+        <th>Source Account</th>
         <th>Total</th>
         <th>Location</th>
         <th>Video</th>
